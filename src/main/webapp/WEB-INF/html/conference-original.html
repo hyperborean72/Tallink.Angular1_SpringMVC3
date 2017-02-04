@@ -1,0 +1,47 @@
+<h3>Conferences</h3>
+<div class="alert alert-info" ng-show="conferences.length == 0">There are no planned conferences</div>
+<table class="table table-bordered table-striped" ng-show="conferences.length > 0">
+    <thead>
+    <tr>
+        <th style="text-align: center; width: 25px;">ID</th>
+        <th style="text-align: center;">Title</th>
+        <th style="text-align: center;">Date</th>
+        <th style="text-align: center;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="conference in conferences">
+        <td>{{conference[0]}}</td>
+        <td>{{conference[1]}}</td>
+        <td>{{conference[2]}}</td>
+        <td style="width:180px;text-align: center;">
+            <button class="btn btn-mini btn-danger" ng-click="removeConference(conference[0])">Delete</button>
+            <button class="btn btn-mini btn-success" ng-click="editConference(conference)">Edit</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="inputName">Title</label>
+        <div class="controls">
+            <input type="text" id="inputName" ng-model="conference_form.name" placeholder="Conference title" required>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="inputDate">Date</label>
+        <div class="controls">
+            <input type="text" id="inputDate" ng-model="conference_form.date" placeholder="yyyy-MM-dd" required>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="controls">
+            <button class="btn btn-primary" ng-disabled="!(conference_form.name&&conference_form.date)" ng-hide="editMode" ng-click="addConference(conference_form)">Add</button>
+            <button class="btn btn-primary" ng-disabled="!(conference_form.name&&conference_form.date)" ng-show="editMode" ng-click="updateConference(conference_form)">Update</button>
+        </div>
+    </div>
+</form>

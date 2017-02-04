@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <mvc:annotation-driven />
+
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
+    <context:component-scan base-package="ru.stepanov.conferences" />
+
+    <context:annotation-config />
+
+    <context:property-placeholder location="classpath:context.properties" />
+
+
+    <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/html/"/>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="cache" value="true"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".html"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+    </bean>
+
+    <!-- JDBC DataSource -->
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+
+    <!-- Настройки JPA -->
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="persistenceXmlLocation" value="classpath:persistence_tallink.xml" />
+        <!--в CSBI вместо свойства выше декларировалось такое свойство
+
+        <property name="persistenceUnitName" value="TransportJavaSE" />
+        здесь value - видимо, unitname из persistence.xml
+        Но зачем он нужен, если, как видно ниже, все свойства hibernate подключения можно определить здесь же?-->
+
+        <property name="persistenceProviderClass" value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+        <property name="jpaProperties">
+            <props>
+                <!--<prop key="hibernate.show_sql" >true</prop>
+                <prop key="hibernate.hbm2ddl.auto" >create</prop>
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>-->
+                <!--<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+                <prop key="net.sf.ehcache.configurationResourceName">file:///${user.dir}/config/ehcache.xml</prop>-->
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+
+        <!--In case of plain JDBC-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+    </bean>
+
+    <!-- Декларативное управление транзакциями -->
+    <!--Насколько я понимаю, этот тег необходим, даже если вы не пользуетесь @Transactional -и или нет?-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>

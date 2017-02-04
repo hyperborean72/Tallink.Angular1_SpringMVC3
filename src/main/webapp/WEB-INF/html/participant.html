@@ -1,0 +1,70 @@
+<h3>Participants</h3>
+<div class="alert alert-info" ng-show="partcipants.length == 0">Not a single participant registered</div>
+<table class="table table-bordered table-striped" ng-show="participants.length > 0">
+    <thead>
+    <tr>
+        <th style="text-align: center; width: 25px;">ID</th>
+        <th style="text-align: center;">Name</th>
+        <th style="text-align: center;">Birthdate</th>
+        <th style="text-align: center;">Conference if any</th>
+        <th style="text-align: center;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="participant in participants">
+        <td>{{participant[0]}}</td>
+        <td>{{participant[1]}}</td>
+        <td>{{participant[2]}}</td>
+        <td>{{participant[3]}}</td>
+        <td style="width:180px;text-align: center;">
+            <button class="btn btn-mini btn-danger" ng-click="removeParticipant(participant[0])">Delete</button>
+            <button class="btn btn-mini btn-success" ng-click="editParticipant(participant)">Edit</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="inputName">Participant name</label>
+        <div class="controls">
+            <input type="text" id="inputName" ng-model="participant_form.name" placeholder="Participant name" required>
+        </div>
+    </div>
+
+    <!-- <div class="control-group">
+        <label class="control-label" for="inputDate">Participant birthdate</label>
+        <div class="controls">
+            <input type="text" id="inputDate" ng-model="participant_form.date" placeholder="yyyy-MM-dd">
+        </div>
+    </div> -->
+	<div class="row">
+		<div class="col-md-6">
+			<p class="input-group">
+			<label class="control-label" for="inputDate">Birthdate</label>
+				<input type="text" id="inputDate" class="form-control" uib-datepicker-popup="{{format}}" ng-model="participant_form.date" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</p>
+		</div>
+	</div>
+    <div class="control-group">
+        <label class="control-label" for="inputConference">Conference to participate</label>
+        <div class="controls">
+            <select id="inputConference"
+                    ng-options="conference[0] as conference[1] for conference in conferences"
+                    ng-model="participant_form.conference">
+            </select>
+            <!-- <pre>{{conferences | json}}</pre -->
+        </div>
+    </div>
+
+
+    <div class="control-group">
+        <div class="controls">
+            <button class="btn btn-primary" ng-disabled="!(participant_form.name&&participant_form.date)" ng-hide="editMode" ng-click="addParticipant(participant_form)">Add</button>
+            <button class="btn btn-primary" ng-disabled="!(participant_form.name&&participant_form.date)" ng-show="editMode" ng-click="updateParticipant(participant_form)">Update</button>
+        </div>
+    </div>
+</form>
