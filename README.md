@@ -1,4 +1,4 @@
-Tallink Test Task
+Test Task for the Tallink Silja Oy
 
 
 The goal of the application is to register Participants for various Conferences [and allocate specific Room for the Conference – to be done].
